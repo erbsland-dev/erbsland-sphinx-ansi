@@ -5,7 +5,7 @@ Requirements
 Runtime Requirements
 ====================
 
-To use this extension, you only need **Python 3.12 or newer**.
+To use this extension, you only need **Python 3.10 or newer**.
 There are no external dependencies required at runtime.
 
 Development Requirements

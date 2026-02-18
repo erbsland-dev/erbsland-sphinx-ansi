@@ -4,7 +4,7 @@ description = "A Sphinx extension to format ANSI colored/formated terminal outpu
 authors = [{ name = "Tobias Erbsland / Erbsland DEV", email = "info@erbsland.dev" }]
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = []
 dynamic = ["version"]
 
