@@ -1,0 +1,42 @@
+[project]
+name = "erbsland-sphinx-ansi"
+description = "A Sphinx extension to format ANSI colored/formated terminal output"
+authors = [{ name = "Tobias Erbsland / Erbsland DEV", email = "info@erbsland.dev" }]
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.12"
+dependencies = []
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/erbsland-dev/erbsland-sphinx-ansi"
+Issues = "https://github.com/erbsland-dev/erbsland-sphinx-ansi/issues"
+
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.envs.test]
+dependencies = ["pytest"]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.envs.test.scripts]
+run = "pytest"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/erbsland/sphinx"]
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/erbsland/sphinx/ansi/_version.py"
+
+[tool.hatch.metadata]
+allow-ambiguous-features = true
+sources = ["src"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+pythonpath = ["src"]

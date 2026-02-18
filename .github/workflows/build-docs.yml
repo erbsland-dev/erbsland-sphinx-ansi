@@ -1,0 +1,40 @@
+name: Docs
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main, dev ]
+  workflow_dispatch: {}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+      - name: Install Sphinx
+        run: |
+          pip install sphinx sphinx-rtd-theme sphinx-design sphinx-copybutton
+      - name: Build documentation
+        run: |
+          sphinx-build doc _build
+      - name: Set CNAME if in public repo
+        id: cname
+        run: |
+          if [ "${{ github.repository }}" = "erbsland-dev/erbsland-sphinx-ansi" ]; then
+            echo "CNAME=sphinx-ansi.erbsland.dev" >> $GITHUB_ENV
+          fi
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: _build/
+          force_orphan: true
+          cname: ${{ env.CNAME }}
