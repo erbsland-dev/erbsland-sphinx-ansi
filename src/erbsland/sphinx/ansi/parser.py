@@ -12,6 +12,8 @@ from docutils.parsers.rst.directives import single_char_or_unicode
 from erbsland.sphinx.ansi.attribute import ANSIAttribute
 from erbsland.sphinx.ansi.definition import definition_from_ansi_code
 
+DEFAULT_THEME = "erbsland-ansi"
+
 
 class ANSILiteralBlock(nodes.literal_block):
     """The literal_block node, for ANSI color codes."""
@@ -37,27 +39,32 @@ class ANSICodeParser(object):
         block.replace_self(nodes.literal_block(cleaned_text, cleaned_text))
 
     def _colorize_block_contents(self, block: ANSILiteralBlock):
-        new_literal = nodes.literal_block(block.rawsource, classes=["erbsland-ansi-block"])
+        theme = block.get("ansi_theme", DEFAULT_THEME)
+        new_literal = nodes.literal_block(block.rawsource, classes=[f"{theme}-block"])
         block.replace_self(new_literal)
-
         current_attributes: dict[ANSIAttribute, str] = {}
         last_end = 0
         nodes_with_formatting = []
         for match in self.RE_ANSI_FORMAT_SEQUENCE.finditer(block.rawsource):
             head = block.rawsource[last_end : match.start()]
             if head:
-                nodes_with_formatting.append(self._create_formatting_node(head, current_attributes))
+                nodes_with_formatting.append(self._create_formatting_node(head, current_attributes, theme))
             for code in [int(c) for c in match.group(1).split(";")]:
                 self._update_attributes(code, current_attributes)
             last_end = match.end()
         tail = block.rawsource[last_end:]
 
-        nodes_with_formatting.append(self._create_formatting_node(tail, current_attributes))
+        nodes_with_formatting.append(self._create_formatting_node(tail, current_attributes, theme))
         new_literal.extend(nodes_with_formatting)
 
-    def _create_formatting_node(self, text: str, current_attributes: dict[ANSIAttribute, str]):
+    def _create_formatting_node(
+        self,
+        text: str,
+        current_attributes: dict[ANSIAttribute, str],
+        theme: str,
+    ):
         if current_attributes:
-            classes = list([f"erbsland-ansi-{attr.to_class_name(value)}" for attr, value in current_attributes.items()])
+            classes = list([f"{theme}-{attr.to_class_name(value)}" for attr, value in current_attributes.items()])
             return nodes.inline(text=text, classes=classes)
         return nodes.Text(text)
 
@@ -82,15 +89,20 @@ class ANSIBlockDirective(rst.Directive):
     A directive to include ANSI formatted output as a literal block
 
     The parameter ``escape-char`` can be used to replace the escape character with a different character.
+    The parameter ``theme`` can be used to replace the CSS class prefix.
     """
 
     has_content = True
     option_spec = {
         "escape-char": single_char_or_unicode,
+        "theme": rst.directives.unchanged,
     }
 
     def run(self):
         text = "\n".join(self.content)
         if "escape-char" in self.options:
             text = text.replace(self.options["escape-char"], "\x1b")
-        return [ANSILiteralBlock(text, text)]
+        block = ANSILiteralBlock(text, text)
+        if "theme" in self.options:
+            block["ansi_theme"] = self.options["theme"]
+        return [block]

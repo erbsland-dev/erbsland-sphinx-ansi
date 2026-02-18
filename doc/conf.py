@@ -30,7 +30,7 @@ add_module_names = False
 
 # -- Options for HTML output -------------------------------------------------
 html_theme = "sphinx_rtd_theme"
-html_static_path = []
+html_static_path = ["_static"]
 html_template_path = []
-html_css_files = []
+html_css_files = ["custom-theme.css"]
 html_js_files = ["https://erbsland.dev/ext/fa7/js/all.min.js"]

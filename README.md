@@ -43,7 +43,7 @@ Use the `erbsland-ansi` directive:
 
 ## Requirements
 
-- Python 3.12+
+- Python 3.10+
 - Sphinx 8.0+ (required by the extension at runtime)
 
 ## Development
@@ -62,7 +62,7 @@ pytest
 
 ## Documentation
 
-Project documentation is in `doc/`.
+Project documentation is here: [https://sphinx-ansi.erbsland.dev](https://sphinx-ansi.erbsland.dev).
 
 ## License
 

@@ -82,13 +82,14 @@ def test_update_attributes_sets_and_clears_attribute_state():
 def test_colorize_block_contents_splits_text_and_applies_css_classes():
     parser = ANSICodeParser()
     block = ANSILiteralBlock("A\x1b[31mB\x1b[44mC\x1b[0mD", "A\x1b[31mB\x1b[44mC\x1b[0mD")
+    block["ansi_theme"] = "custom-theme"
     container = nodes.section()
     container += block
 
     parser._colorize_block_contents(block)
 
     replaced = container.children[0]
-    assert "erbsland-ansi-block" in replaced["classes"]
+    assert "custom-theme-block" in replaced["classes"]
     children = list(replaced.children)
     assert len(children) == 4
 
@@ -97,11 +98,11 @@ def test_colorize_block_contents_splits_text_and_applies_css_classes():
 
     assert isinstance(children[1], nodes.inline)
     assert children[1].astext() == "B"
-    assert children[1]["classes"] == ["erbsland-ansi-red"]
+    assert children[1]["classes"] == ["custom-theme-red"]
 
     assert isinstance(children[2], nodes.inline)
     assert children[2].astext() == "C"
-    assert sorted(children[2]["classes"]) == ["erbsland-ansi-background-blue", "erbsland-ansi-red"]
+    assert sorted(children[2]["classes"]) == ["custom-theme-background-blue", "custom-theme-red"]
 
     assert isinstance(children[3], nodes.Text)
     assert children[3].astext() == "D"
@@ -125,13 +126,14 @@ def test_call_switches_behavior_for_non_html_and_html_builders():
 def test_ansi_block_directive_run_replaces_escape_character():
     directive = ANSIBlockDirective.__new__(ANSIBlockDirective)
     directive.content = ["X#[31mY#[0m"]
-    directive.options = {"escape-char": "#"}
+    directive.options = {"escape-char": "#", "theme": "custom-theme"}
 
     result = directive.run()
 
     assert len(result) == 1
     assert isinstance(result[0], ANSILiteralBlock)
     assert result[0].rawsource == "X\x1b[31mY\x1b[0m"
+    assert result[0]["ansi_theme"] == "custom-theme"
 
 
 def test_setup_registers_static_assets_directive_and_callback():
@@ -139,12 +141,12 @@ def test_setup_registers_static_assets_directive_and_callback():
 
     result = ansi_extension.setup(app)
 
-    assert app.static_dirs
     assert app.css_files == ["erbsland-ansi/ansi.css"]
     assert app.required_sphinx == ["8.0"]
     assert app.directives == [("erbsland-ansi", ANSIBlockDirective)]
-    assert len(app.connections) == 1
-    assert app.connections[0][0] == "doctree-resolved"
-    assert isinstance(app.connections[0][1], ANSICodeParser)
+    assert len(app.connections) == 2
+    assert app.connections[0][0] == "builder-inited"
+    assert app.connections[1][0] == "doctree-resolved"
+    assert isinstance(app.connections[1][1], ANSICodeParser)
     assert result["parallel_read_safe"] is True
     assert result["parallel_write_safe"] is True

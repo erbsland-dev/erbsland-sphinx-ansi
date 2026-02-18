@@ -7,9 +7,12 @@ ANSI-colored and formatted terminal output directly in your documentation.
 It is especially useful when documenting command-line tools, build logs,
 or interactive sessions where color improves readability and realism.
 
-The extension also provides an optional ``escape-char`` parameter that allows
-you to replace the ANSI escape character (``\x1b``) with a visible placeholder
-character inside reStructuredText sources.
+Features
+========
+
+*   Optional ``escape-char`` parameter that allows you to replace the ANSI escape character (``\x1b``) with a visible placeholder character inside reStructuredText sources.
+*   Optional ``theme`` parameter that allows you to customize the CSS class prefix used for styling.
+*   Works with both HTML and non-HTML output formats.
 
 Quick Start
 ===========
@@ -73,6 +76,39 @@ The following block demonstrates the rendered output:
 
 When building HTML documentation, the ANSI color codes are converted into
 styled output that closely resembles the original terminal appearance.
+
+Custom Theming
+==============
+
+Use the parameter ``theme`` to customize the CSS class prefix used for styling:
+
+.. code-block:: rst
+
+    .. erbsland-ansi::
+        :escape-char: ␛
+        :theme: my-theme
+
+        ␛[32m[sphinx-autobuild] ␛[36mStarting initial build␛[0m
+        ␛[32m[sphinx-autobuild] ␛[34m> python -m sphinx build doc _build␛[0m
+        ␛[32m[sphinx-autobuild] ␛[36mServing on http://127.0.0.1:9000␛[0m
+        ␛[32m[sphinx-autobuild] ␛[36mWaiting to detect changes...␛[0m
+
+Create a CSS file ``static/my-theme.css`` with the following content:
+
+.. literalinclude:: _static/custom-theme.css
+   :language: css
+
+Output with the custom theme:
+
+.. erbsland-ansi::
+    :escape-char: ␛
+    :theme: my-theme
+
+    ␛[32m[sphinx-autobuild] ␛[36mStarting initial build␛[0m
+    ␛[32m[sphinx-autobuild] ␛[34m> python -m sphinx build doc _build␛[0m
+    ␛[32m[sphinx-autobuild] ␛[36mServing on http://127.0.0.1:9000␛[0m
+    ␛[32m[sphinx-autobuild] ␛[36mWaiting to detect changes...␛[0m
+
 
 Contents
 ========

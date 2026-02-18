@@ -1,7 +1,4 @@
 pytest
-pytest-xdist
-pytest-cov
-coverage
 black
 hatch
 hatch-vcs

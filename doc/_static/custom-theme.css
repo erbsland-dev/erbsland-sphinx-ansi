@@ -1,0 +1,46 @@
+
+.my-theme-block {
+    background-color: #fdfbff;
+    color: #23143a;
+}
+
+.my-theme-bold { font-weight: bold; }
+.my-theme-dim { opacity: 0.5; }
+.my-theme-italic { font-style: italic; }
+.my-theme-underline { text-decoration: underline; }
+.my-theme-blink { text-decoration: blink; }
+.my-theme-reverse { }
+.my-theme-hidden { opacity: 0; }
+.my-theme-strike { text-decoration: line-through; }
+.my-theme-black { color: #2f153f; }
+.my-theme-red { color: #c0213a; }
+.my-theme-green { color: #1b8a3a; }
+.my-theme-yellow { color: #b26a00; }
+.my-theme-blue { color: #1c5fd4; }
+.my-theme-magenta { color: #9a1f9b; }
+.my-theme-cyan { color: #007e9c; }
+.my-theme-white { color: #3a234e; }
+.my-theme-black.my-theme-bold, .my-theme-bright-black { color: #16001f; }
+.my-theme-red.my-theme-bold, .my-theme-bright-red { color: #a80023; }
+.my-theme-green.my-theme-bold, .my-theme-bright-green { color: #0b6b2a; }
+.my-theme-yellow.my-theme-bold, .my-theme-bright-yellow { color: #8f4b00; }
+.my-theme-blue.my-theme-bold, .my-theme-bright-blue { color: #0c49b8; }
+.my-theme-magenta.my-theme-bold, .my-theme-bright-magenta { color: #7d0082; }
+.my-theme-cyan.my-theme-bold, .my-theme-bright-cyan { color: #006682; }
+.my-theme-white.my-theme-bold, .my-theme-bright-white { color: #210e33; }
+.my-theme-background-black { background-color: #f0e7ff; }
+.my-theme-background-red { background-color: #ffd9de; }
+.my-theme-background-green { background-color: #d6f5dd; }
+.my-theme-background-yellow { background-color: #ffe9bf; }
+.my-theme-background-blue { background-color: #dbe7ff; }
+.my-theme-background-magenta { background-color: #f5dcff; }
+.my-theme-background-cyan { background-color: #d6f6ff; }
+.my-theme-background-white { background-color: #efe3ff; }
+.my-theme-background-bright-black { color: #16001f; }
+.my-theme-background-bright-red { color: #a80023; }
+.my-theme-background-bright-green { color: #0b6b2a; }
+.my-theme-background-bright-yellow { color: #8f4b00; }
+.my-theme-background-bright-blue { color: #0c49b8; }
+.my-theme-background-bright-magenta { color: #7d0082; }
+.my-theme-background-bright-cyan { color: #006682; }
+.my-theme-background-bright-white { color: #210e33; }
