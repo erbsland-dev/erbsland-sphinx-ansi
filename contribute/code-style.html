@@ -1,0 +1,184 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ErbslandDEV Python Code Style &mdash; ANSI Colored Terminal Output for Sphinx 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/erbsland-ansi/ansi.css?v=76679ccf" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom-theme.css?v=fc90a840" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="https://erbsland.dev/ext/fa7/js/all.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ANSI Colored Terminal Output for Sphinx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../requirements.html">Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Contributing Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ANSI Colored Terminal Output for Sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ErbslandDEV Python Code Style</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/contribute/code-style.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="erbslanddev-python-code-style">
+<h1>ErbslandDEV Python Code Style<a class="headerlink" href="#erbslanddev-python-code-style" title="Link to this heading"></a></h1>
+<p>This guide defines the core Python style conventions used across all ErbslandDEV codebases.
+It ensures that our projects remain consistent, easy to read, and maintainable for everyone.</p>
+<section id="code-format-with-black">
+<h2>Code Format with Black<a class="headerlink" href="#code-format-with-black" title="Link to this heading"></a></h2>
+<p>We use the <a class="reference external" href="https://black.readthedocs.io/">Black Formatter</a> to format all Python code in a consistent way.
+Code should always be formatted automatically instead of manually adjusted. This saves time, prevents bikeshedding, and helps everyone focus on the actual logic.</p>
+<p>Run Black with the following command:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>black<span class="w"> </span>--line-length<span class="w"> </span><span class="m">120</span><span class="w"> </span>src<span class="w"> </span>tests
+</pre></div>
+</div>
+<p>We intentionally set the line length to <strong>120 characters</strong> to allow for slightly longer, yet still readable, lines of code.
+This helps reduce unnecessary line breaks, especially in test cases and function signatures.</p>
+</section>
+<section id="api-documentation">
+<h2>API Documentation<a class="headerlink" href="#api-documentation" title="Link to this heading"></a></h2>
+<p>For API documentation, we use the <a class="reference external" href="https://www.sphinx-doc.org/">Sphinx</a> documentation generator.
+Parts of the documentation is built directly from docstrings in the code, so keeping those clear and accurate is essential.</p>
+<section id="docstrings">
+<h3>Docstrings<a class="headerlink" href="#docstrings" title="Link to this heading"></a></h3>
+<p>All public interfaces should be documented using <em>Sphinx/reST-style</em> docstrings.</p>
+<ul class="simple">
+<li><p>If the function signature already makes the parameters and return type clear, a <strong>single-line docstring</strong> is sufficient.</p></li>
+<li><p>If the function has more complex behavior, provide a <strong>multi-line docstring</strong> including parameters, return values, and raised exceptions.</p></li>
+</ul>
+<p>Examples:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">method1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform a simple one-line task.&quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">method2</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform an operation based on ``path`` and ``count``.</span>
+
+<span class="sd">    :param path: The file system path to process.</span>
+<span class="sd">    :param count: The number of iterations to run.</span>
+<span class="sd">    :returns: A string containing the processed result.</span>
+<span class="sd">    :raises ValueError: If the provided path is invalid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>When writing docstrings, always describe the <strong>why</strong> and <strong>what</strong>, not just the <strong>how</strong>.
+This helps future developers (including yourself!) understand the intent behind your code.</p>
+</section>
+<section id="type-hints">
+<h3>Type Hints<a class="headerlink" href="#type-hints" title="Link to this heading"></a></h3>
+<p>We consistently use <strong>type hints</strong> throughout the codebase.
+They serve three purposes:</p>
+<ul class="simple">
+<li><p>Documenting the API directly in the function signature.</p></li>
+<li><p>Providing better IDE support (auto-completion and error detection).</p></li>
+<li><p>Enabling static analysis tools such as <code class="docutils literal notranslate"><span class="pre">mypy</span></code> or <code class="docutils literal notranslate"><span class="pre">pyright</span></code>.</p></li>
+</ul>
+<p>Using type hints is not optional — it’s an integral part of how we write Python at ErbslandDEV.</p>
+</section>
+</section>
+<section id="file-size-limits">
+<h2>File Size Limits<a class="headerlink" href="#file-size-limits" title="Link to this heading"></a></h2>
+<p>We prefer many <strong>small, focused files</strong> over a few very large ones.
+Smaller files are easier to read, review, and maintain, and they naturally encourage a clean project structure.</p>
+<p>As a rule of thumb:</p>
+<ul class="simple">
+<li><p>Each file <em>should</em> stay <strong>under 500 lines</strong>.</p></li>
+<li><p>Each file <em>must</em> stay <strong>under 1000 lines</strong>.</p></li>
+</ul>
+<p>If a file grows too large, consider breaking it into smaller parts:</p>
+<ul class="simple">
+<li><p>Move related functionality into a dedicated <strong>subpackage</strong> with multiple modules.</p></li>
+<li><p>If you are dealing with a large class, <strong>refactor it using composition or delegation</strong>. This not only reduces file size but also improves readability and testability.</p></li>
+</ul>
+<p>Keeping files concise makes it easier for new contributors to understand the project and helps avoid the “god module” or “god class” anti-patterns.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Tobias Erbsland - Erbsland DEV.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

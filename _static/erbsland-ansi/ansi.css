@@ -1,0 +1,45 @@
+.erbsland-ansi-block {
+    background-color: #0a0611;
+    color: #e5dff1;
+}
+
+.erbsland-ansi-bold { font-weight: bold; }
+.erbsland-ansi-dim { opacity: 0.5; }
+.erbsland-ansi-italic { font-style: italic; }
+.erbsland-ansi-underline { text-decoration: underline; }
+.erbsland-ansi-blink { text-decoration: blink; }
+.erbsland-ansi-reverse { }
+.erbsland-ansi-hidden { opacity: 0; }
+.erbsland-ansi-strike { text-decoration: line-through; }
+.erbsland-ansi-black { color: #261d35; }
+.erbsland-ansi-red { color: #d97780; }
+.erbsland-ansi-green { color: #7aa860; }
+.erbsland-ansi-yellow { color: #bc904f; }
+.erbsland-ansi-blue { color: #6b9bd9; }
+.erbsland-ansi-magenta { color: #b77ed1; }
+.erbsland-ansi-cyan { color: #52a9a9; }
+.erbsland-ansi-white { color: #beb1da; }
+.erbsland-ansi-black.erbsland-ansi-bold, .erbsland-ansi-bright-black { color: #584875; }
+.erbsland-ansi-red.erbsland-ansi-bold, .erbsland-ansi-bright-red { color: #e6949a; }
+.erbsland-ansi-green.erbsland-ansi-bold, .erbsland-ansi-bright-green { color: #8ebf73; }
+.erbsland-ansi-yellow.erbsland-ansi-bold, .erbsland-ansi-bright-yellow { color: #d3a563; }
+.erbsland-ansi-blue.erbsland-ansi-bold, .erbsland-ansi-bright-blue { color: #88b1e5; }
+.erbsland-ansi-magenta.erbsland-ansi-bold, .erbsland-ansi-bright-magenta { color: #c899de; }
+.erbsland-ansi-cyan.erbsland-ansi-bold, .erbsland-ansi-bright-cyan { color: #63c0bf; }
+.erbsland-ansi-white.erbsland-ansi-bold, .erbsland-ansi-bright-white { color: #f2eff8; }
+.erbsland-ansi-background-black { background-color: #261d35; }
+.erbsland-ansi-background-red { background-color: #d97780; }
+.erbsland-ansi-background-green { background-color: #7aa860; }
+.erbsland-ansi-background-yellow { background-color: #bc904f; }
+.erbsland-ansi-background-blue { background-color: #6b9bd9; }
+.erbsland-ansi-background-magenta { background-color: #b77ed1; }
+.erbsland-ansi-background-cyan { background-color: #52a9a9; }
+.erbsland-ansi-background-white { background-color: #beb1da; }
+.erbsland-ansi-background-bright-black { color: #584875; }
+.erbsland-ansi-background-bright-red { color: #e6949a; }
+.erbsland-ansi-background-bright-green { color: #8ebf73; }
+.erbsland-ansi-background-bright-yellow { color: #d3a563; }
+.erbsland-ansi-background-bright-blue { color: #88b1e5; }
+.erbsland-ansi-background-bright-magenta { color: #c899de; }
+.erbsland-ansi-background-bright-cyan { color: #63c0bf; }
+.erbsland-ansi-background-bright-white { color: #f2eff8; }
