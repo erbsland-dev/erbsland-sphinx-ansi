@@ -26,7 +26,7 @@ source = "vcs"
 run = "pytest"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/erbsland/sphinx"]
+packages = ["src/erbsland"]
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/erbsland/sphinx/ansi/_version.py"
