@@ -58,6 +58,8 @@ CODE_ATTRIBUTE_MAP: dict[int, ANSIAttributeDefinition] = {
     26: ANSIAttributeDefinition(ANSIAttribute.REVERSE, ""),
     27: ANSIAttributeDefinition(ANSIAttribute.HIDDEN, ""),
     28: ANSIAttributeDefinition(ANSIAttribute.STRIKE, ""),
+    39: ANSIAttributeDefinition(ANSIAttribute.FOREGROUND, ""),
+    49: ANSIAttributeDefinition(ANSIAttribute.BACKGROUND, ""),
 }
 
 

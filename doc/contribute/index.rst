@@ -2,11 +2,20 @@
 Contributing Guidelines
 ***********************
 
+.. toctree::
+    :maxdepth: 2
+    :hidden:
+
+    code-of-conduct.rst
+    code-style.rst
+    write-a-unittest.rst
+
 Thank you for considering a contribution to this project!
 We truly appreciate your time and effort, and we’re excited to collaborate with you.  
 
-Code of Conduct
-===============
+.. div:: sd-fs-4 sd-font-weight-bold
+
+    Code of Conduct
 
 By contributing to this project, you agree to follow our :doc:`Code of Conduct <code-of-conduct>`.  
 Please take a moment to read it—it helps us maintain a **welcoming, respectful, and inclusive community** for everyone.
@@ -18,8 +27,9 @@ Please take a moment to read it—it helps us maintain a **welcoming, respectful
 
     Read the Code of Conduct →
 
-How You Can Contribute
-======================
+.. div:: sd-fs-4 sd-font-weight-bold
+
+    How You Can Contribute
 
 We welcome contributions of all kinds. Here are a few ways to get involved:
 
@@ -29,8 +39,9 @@ We welcome contributions of all kinds. Here are a few ways to get involved:
 
 Even small contributions, such as improving documentation, fixing typos, or clarifying error messages, are valuable and appreciated.  
 
-Pull Requests
-=============
+.. div:: sd-fs-4 sd-font-weight-bold
+
+    Pull Requests
 
 We encourage pull requests, but to avoid duplicate work and make sure we’re aligned, please **reach out first** by:  
 
@@ -46,8 +57,9 @@ Before submitting, please also review:
 
 Well-tested, clean, and documented contributions have the best chance of being merged quickly.  
 
-About the Use of Artificial Intelligence
-========================================
+.. div:: sd-fs-4 sd-font-weight-bold
+
+    About the Use of Artificial Intelligence
 
 We value contributions that are thoughtfully crafted by humans.  
 Using tools to improve clarity or catch mistakes is perfectly fine, but **all contributions must be reviewed and validated by you before submission**.  

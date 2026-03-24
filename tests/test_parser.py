@@ -108,6 +108,52 @@ def test_colorize_block_contents_splits_text_and_applies_css_classes():
     assert children[3].astext() == "D"
 
 
+def test_colorize_block_contents_ignores_non_sgr_csi_sequences():
+    parser = ANSICodeParser()
+    block = ANSILiteralBlock(
+        "\x1b[?25l\x1b[92mHello\x1b[0m\x1b[?25h",
+        "\x1b[?25l\x1b[92mHello\x1b[0m\x1b[?25h",
+    )
+    container = nodes.section()
+    container += block
+
+    parser._colorize_block_contents(block)
+
+    replaced = container.children[0]
+    children = list(replaced.children)
+    assert len(children) == 1
+    assert isinstance(children[0], nodes.inline)
+    assert children[0].astext() == "Hello"
+    assert children[0]["classes"] == ["erbsland-ansi-bright-green"]
+
+
+def test_colorize_block_contents_applies_partial_foreground_and_background_resets():
+    parser = ANSICodeParser()
+    block = ANSILiteralBlock("A\x1b[31;44mB\x1b[49mC\x1b[39mD", "A\x1b[31;44mB\x1b[49mC\x1b[39mD")
+    container = nodes.section()
+    container += block
+
+    parser._colorize_block_contents(block)
+
+    replaced = container.children[0]
+    children = list(replaced.children)
+    assert len(children) == 4
+
+    assert isinstance(children[0], nodes.Text)
+    assert children[0].astext() == "A"
+
+    assert isinstance(children[1], nodes.inline)
+    assert children[1].astext() == "B"
+    assert sorted(children[1]["classes"]) == ["erbsland-ansi-background-blue", "erbsland-ansi-red"]
+
+    assert isinstance(children[2], nodes.inline)
+    assert children[2].astext() == "C"
+    assert children[2]["classes"] == ["erbsland-ansi-red"]
+
+    assert isinstance(children[3], nodes.Text)
+    assert children[3].astext() == "D"
+
+
 def test_call_switches_behavior_for_non_html_and_html_builders():
     parser = ANSICodeParser()
 
@@ -121,6 +167,20 @@ def test_call_switches_behavior_for_non_html_and_html_builders():
     html_tree = _DocTree(html_block)
     parser(_App("html"), html_tree, "index")
     assert "erbsland-ansi-block" in html_tree.container.children[0]["classes"]
+
+
+def test_remove_ansi_formatting_strips_non_sgr_csi_sequences():
+    parser = ANSICodeParser()
+    block = ANSILiteralBlock("\x1b[?25lHello\x1b[?25h", "\x1b[?25lHello\x1b[?25h")
+    container = nodes.section()
+    container += block
+
+    parser._remove_ansi_formatting(block)
+
+    replaced = container.children[0]
+    assert isinstance(replaced, nodes.literal_block)
+    assert replaced.rawsource == "Hello"
+    assert replaced.astext() == "Hello"
 
 
 def test_ansi_block_directive_run_replaces_escape_character():

@@ -49,5 +49,18 @@ def test_definition_from_ansi_code_returns_reset_definition_for_code_zero():
     assert definition.value == ""
 
 
+def test_definition_from_ansi_code_returns_partial_reset_definitions():
+    foreground_reset = definition_from_ansi_code(39)
+    background_reset = definition_from_ansi_code(49)
+
+    assert foreground_reset is not None
+    assert foreground_reset.attribute == ANSIAttribute.FOREGROUND
+    assert foreground_reset.value == ""
+
+    assert background_reset is not None
+    assert background_reset.attribute == ANSIAttribute.BACKGROUND
+    assert background_reset.value == ""
+
+
 def test_definition_from_ansi_code_returns_none_for_unknown_code():
     assert definition_from_ansi_code(999) is None

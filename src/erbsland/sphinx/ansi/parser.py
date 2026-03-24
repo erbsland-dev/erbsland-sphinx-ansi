@@ -24,7 +24,7 @@ class ANSILiteralBlock(nodes.literal_block):
 class ANSICodeParser(object):
     """Either remove ANSI formatting from a block, or colorize it for HTML output."""
 
-    RE_ANSI_FORMAT_SEQUENCE: re.Pattern[str] = re.compile(r"\x1b\[([^m]+)m")
+    RE_ANSI_CSI_SEQUENCE: re.Pattern[str] = re.compile(r"\x1b\[([0-?]*)([ -/]*)([@-~])")
 
     def __call__(self, app, doctree, docname):
         if app.builder.name != "html":
@@ -35,7 +35,7 @@ class ANSICodeParser(object):
                 self._colorize_block_contents(ansi_block)
 
     def _remove_ansi_formatting(self, block: ANSILiteralBlock):
-        cleaned_text = self.RE_ANSI_FORMAT_SEQUENCE.sub("", block.rawsource)
+        cleaned_text = self.RE_ANSI_CSI_SEQUENCE.sub("", block.rawsource)
         block.replace_self(nodes.literal_block(cleaned_text, cleaned_text))
 
     def _colorize_block_contents(self, block: ANSILiteralBlock):
@@ -45,16 +45,16 @@ class ANSICodeParser(object):
         current_attributes: dict[ANSIAttribute, str] = {}
         last_end = 0
         nodes_with_formatting = []
-        for match in self.RE_ANSI_FORMAT_SEQUENCE.finditer(block.rawsource):
+        for match in self.RE_ANSI_CSI_SEQUENCE.finditer(block.rawsource):
             head = block.rawsource[last_end : match.start()]
             if head:
                 nodes_with_formatting.append(self._create_formatting_node(head, current_attributes, theme))
-            for code in [int(c) for c in match.group(1).split(";")]:
-                self._update_attributes(code, current_attributes)
+            self._apply_csi_sequence(match.group(1), match.group(3), current_attributes)
             last_end = match.end()
         tail = block.rawsource[last_end:]
 
-        nodes_with_formatting.append(self._create_formatting_node(tail, current_attributes, theme))
+        if tail:
+            nodes_with_formatting.append(self._create_formatting_node(tail, current_attributes, theme))
         new_literal.extend(nodes_with_formatting)
 
     def _create_formatting_node(
@@ -82,6 +82,26 @@ class ANSICodeParser(object):
                 attributes[attr] = definition.value
             elif attr in attributes:
                 del attributes[attr]
+
+    def _apply_csi_sequence(self, parameters: str, final_byte: str, attributes: dict[ANSIAttribute, str]):
+        if final_byte != "m":
+            return
+        for code in self._parse_sgr_parameters(parameters):
+            self._update_attributes(code, attributes)
+
+    @staticmethod
+    def _parse_sgr_parameters(parameters: str) -> list[int]:
+        if not parameters:
+            return [0]
+        codes = []
+        for parameter in parameters.split(";"):
+            if not parameter:
+                codes.append(0)
+                continue
+            if not parameter.isdigit():
+                return []
+            codes.append(int(parameter))
+        return codes
 
 
 class ANSIBlockDirective(rst.Directive):
