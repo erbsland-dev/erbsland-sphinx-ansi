@@ -48,6 +48,8 @@ Use the `erbsland-ansi` directive:
 
 ## Development
 
+- Python 3.13+
+
 Install development dependencies:
 
 ```shell
