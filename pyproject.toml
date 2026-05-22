@@ -5,7 +5,10 @@ authors = [{ name = "Tobias Erbsland / Erbsland DEV", email = "info@erbsland.dev
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "docutils",
+    "sphinx>=8.0",
+]
 dynamic = ["version"]
 
 [project.urls]
