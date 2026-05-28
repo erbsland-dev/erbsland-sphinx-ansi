@@ -6,7 +6,11 @@ from docutils import nodes
 
 import erbsland.sphinx.ansi as ansi_extension
 from erbsland.sphinx.ansi.attribute import ANSIAttribute
-from erbsland.sphinx.ansi.parser import ANSIBlockDirective, ANSICodeParser, ANSILiteralBlock
+from erbsland.sphinx.ansi.parser import (
+    ANSIBlockDirective,
+    ANSICodeParser,
+    ANSILiteralBlock,
+)
 
 
 class _Builder:
@@ -54,9 +58,17 @@ class _DocTree:
         return []
 
 
+def _html_literal_block(container: nodes.Element) -> nodes.literal_block:
+    """Return the wrapped literal block from a colorized ANSI container."""
+    assert len(container.children) == 1
+    literal_block = container.children[0]
+    assert isinstance(literal_block, nodes.literal_block)
+    return literal_block
+
+
 def test_remove_ansi_formatting_replaces_literal_block_with_plain_text():
     parser = ANSICodeParser()
-    block = ANSILiteralBlock("Hello \x1b[31mRed\x1b[0m", "Hello \x1b[31mRed\x1b[0m")
+    block = ANSILiteralBlock("Hello \x1b[31mRed\x1b[0m")
     container = nodes.section()
     container += block
 
@@ -81,7 +93,7 @@ def test_update_attributes_sets_and_clears_attribute_state():
 
 def test_colorize_block_contents_splits_text_and_applies_css_classes():
     parser = ANSICodeParser()
-    block = ANSILiteralBlock("A\x1b[31mB\x1b[44mC\x1b[0mD", "A\x1b[31mB\x1b[44mC\x1b[0mD")
+    block = ANSILiteralBlock("A\x1b[31mB\x1b[44mC\x1b[0mD")
     block["ansi_theme"] = "custom-theme"
     container = nodes.section()
     container += block
@@ -90,11 +102,15 @@ def test_colorize_block_contents_splits_text_and_applies_css_classes():
 
     replaced = container.children[0]
     assert "custom-theme-block" in replaced["classes"]
-    children = list(replaced.children)
+    assert "nohighlight" in replaced["classes"]
+    literal_block = _html_literal_block(replaced)
+    assert literal_block["classes"] == ["custom-theme-block", "nohighlight"]
+    children = list(literal_block.children)
     assert len(children) == 4
 
-    assert isinstance(children[0], nodes.Text)
+    assert isinstance(children[0], nodes.inline)
     assert children[0].astext() == "A"
+    assert children[0]["classes"] == []
 
     assert isinstance(children[1], nodes.inline)
     assert children[1].astext() == "B"
@@ -102,25 +118,29 @@ def test_colorize_block_contents_splits_text_and_applies_css_classes():
 
     assert isinstance(children[2], nodes.inline)
     assert children[2].astext() == "C"
-    assert sorted(children[2]["classes"]) == ["custom-theme-background-blue", "custom-theme-red"]
+    assert sorted(children[2]["classes"]) == [
+        "custom-theme-background-blue",
+        "custom-theme-red",
+    ]
 
-    assert isinstance(children[3], nodes.Text)
+    assert isinstance(children[3], nodes.inline)
     assert children[3].astext() == "D"
+    assert children[3]["classes"] == []
 
 
 def test_colorize_block_contents_ignores_non_sgr_csi_sequences():
     parser = ANSICodeParser()
-    block = ANSILiteralBlock(
-        "\x1b[?25l\x1b[92mHello\x1b[0m\x1b[?25h",
-        "\x1b[?25l\x1b[92mHello\x1b[0m\x1b[?25h",
-    )
+    block = ANSILiteralBlock("\x1b[?25l\x1b[92mHello\x1b[0m\x1b[?25h")
     container = nodes.section()
     container += block
 
     parser._colorize_block_contents(block)
 
     replaced = container.children[0]
-    children = list(replaced.children)
+    assert "erbsland-ansi-block" in replaced["classes"]
+    assert "nohighlight" in replaced["classes"]
+    literal_block = _html_literal_block(replaced)
+    children = list(literal_block.children)
     assert len(children) == 1
     assert isinstance(children[0], nodes.inline)
     assert children[0].astext() == "Hello"
@@ -129,49 +149,61 @@ def test_colorize_block_contents_ignores_non_sgr_csi_sequences():
 
 def test_colorize_block_contents_applies_partial_foreground_and_background_resets():
     parser = ANSICodeParser()
-    block = ANSILiteralBlock("A\x1b[31;44mB\x1b[49mC\x1b[39mD", "A\x1b[31;44mB\x1b[49mC\x1b[39mD")
+    block = ANSILiteralBlock("A\x1b[31;44mB\x1b[49mC\x1b[39mD")
     container = nodes.section()
     container += block
 
     parser._colorize_block_contents(block)
 
     replaced = container.children[0]
-    children = list(replaced.children)
+    assert "erbsland-ansi-block" in replaced["classes"]
+    assert "nohighlight" in replaced["classes"]
+    literal_block = _html_literal_block(replaced)
+    assert literal_block["classes"] == ["erbsland-ansi-block", "nohighlight"]
+    children = list(literal_block.children)
     assert len(children) == 4
 
-    assert isinstance(children[0], nodes.Text)
+    assert isinstance(children[0], nodes.inline)
     assert children[0].astext() == "A"
+    assert children[0]["classes"] == []
 
     assert isinstance(children[1], nodes.inline)
     assert children[1].astext() == "B"
-    assert sorted(children[1]["classes"]) == ["erbsland-ansi-background-blue", "erbsland-ansi-red"]
+    assert sorted(children[1]["classes"]) == [
+        "erbsland-ansi-background-blue",
+        "erbsland-ansi-red",
+    ]
 
     assert isinstance(children[2], nodes.inline)
     assert children[2].astext() == "C"
     assert children[2]["classes"] == ["erbsland-ansi-red"]
 
-    assert isinstance(children[3], nodes.Text)
+    assert isinstance(children[3], nodes.inline)
     assert children[3].astext() == "D"
+    assert children[3]["classes"] == []
 
 
 def test_call_switches_behavior_for_non_html_and_html_builders():
     parser = ANSICodeParser()
 
     text = "A\x1b[31mB\x1b[0m"
-    non_html_block = ANSILiteralBlock(text, text)
+    non_html_block = ANSILiteralBlock(text)
     non_html_tree = _DocTree(non_html_block)
     parser(_App("latex"), non_html_tree, "index")
     assert non_html_tree.container.children[0].astext() == "AB"
 
-    html_block = ANSILiteralBlock(text, text)
+    html_block = ANSILiteralBlock(text)
     html_tree = _DocTree(html_block)
     parser(_App("html"), html_tree, "index")
-    assert "erbsland-ansi-block" in html_tree.container.children[0]["classes"]
+    html_container = html_tree.container.children[0]
+    assert "erbsland-ansi-block" in html_container["classes"]
+    assert "nohighlight" in html_container["classes"]
+    assert "nohighlight" in _html_literal_block(html_container)["classes"]
 
 
 def test_remove_ansi_formatting_strips_non_sgr_csi_sequences():
     parser = ANSICodeParser()
-    block = ANSILiteralBlock("\x1b[?25lHello\x1b[?25h", "\x1b[?25lHello\x1b[?25h")
+    block = ANSILiteralBlock("\x1b[?25lHello\x1b[?25h")
     container = nodes.section()
     container += block
 

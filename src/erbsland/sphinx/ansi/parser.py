@@ -15,10 +15,11 @@ from erbsland.sphinx.ansi.definition import definition_from_ansi_code
 DEFAULT_THEME = "erbsland-ansi"
 
 
-class ANSILiteralBlock(nodes.literal_block):
+class ANSILiteralBlock(nodes.container):
     """The literal_block node, for ANSI color codes."""
 
-    pass
+    def __init__(self, rawsource: str = "", *children, **attributes):
+        super().__init__(rawsource, *children, **attributes)
 
 
 class ANSICodeParser(object):
@@ -40,22 +41,21 @@ class ANSICodeParser(object):
 
     def _colorize_block_contents(self, block: ANSILiteralBlock):
         theme = block.get("ansi_theme", DEFAULT_THEME)
-        new_literal = nodes.literal_block(block.rawsource, classes=[f"{theme}-block"])
-        block.replace_self(new_literal)
+        block["classes"].extend([f"{theme}-block", "nohighlight"])
+        block.clear()
+        pre_block = nodes.literal_block("", "", classes=[f"{theme}-block", "nohighlight"])
+        block += pre_block
         current_attributes: dict[ANSIAttribute, str] = {}
         last_end = 0
-        nodes_with_formatting = []
         for match in self.RE_ANSI_CSI_SEQUENCE.finditer(block.rawsource):
             head = block.rawsource[last_end : match.start()]
             if head:
-                nodes_with_formatting.append(self._create_formatting_node(head, current_attributes, theme))
+                pre_block += self._create_formatting_node(head, current_attributes, theme)
             self._apply_csi_sequence(match.group(1), match.group(3), current_attributes)
             last_end = match.end()
         tail = block.rawsource[last_end:]
-
         if tail:
-            nodes_with_formatting.append(self._create_formatting_node(tail, current_attributes, theme))
-        new_literal.extend(nodes_with_formatting)
+            pre_block += self._create_formatting_node(tail, current_attributes, theme)
 
     def _create_formatting_node(
         self,
@@ -63,10 +63,8 @@ class ANSICodeParser(object):
         current_attributes: dict[ANSIAttribute, str],
         theme: str,
     ):
-        if current_attributes:
-            classes = list([f"{theme}-{attr.to_class_name(value)}" for attr, value in current_attributes.items()])
-            return nodes.inline(text=text, classes=classes)
-        return nodes.Text(text)
+        classes = [f"{theme}-{attr.to_class_name(value)}" for attr, value in current_attributes.items()]
+        return nodes.inline("", text, classes=classes)
 
     def _update_attributes(self, code: int, attributes: dict[ANSIAttribute, str]):
         definition = definition_from_ansi_code(code)
@@ -122,7 +120,7 @@ class ANSIBlockDirective(rst.Directive):
         text = "\n".join(self.content)
         if "escape-char" in self.options:
             text = text.replace(self.options["escape-char"], "\x1b")
-        block = ANSILiteralBlock(text, text)
+        block = ANSILiteralBlock(text)
         if "theme" in self.options:
             block["ansi_theme"] = self.options["theme"]
         return [block]

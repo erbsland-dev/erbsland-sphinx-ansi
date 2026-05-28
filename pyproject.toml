@@ -18,7 +18,8 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 test = ["pytest", "docutils"]
-dev = [{ include-group = "test" }]
+docs = ["sphinx", "sphinx-rtd-theme", "sphinx-design", "sphinx-copybutton"]
+dev = [{ include-group = "test" }, "black", "erbsland-conf", "hatch", "hatch-vcs"]
 
 [tool.hatch.version]
 source = "vcs"

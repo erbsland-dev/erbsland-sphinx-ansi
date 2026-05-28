@@ -174,6 +174,7 @@ Contents
 
     license
     requirements
+    changelog
     contribute/index
     credits
 

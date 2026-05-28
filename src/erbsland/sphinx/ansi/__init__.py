@@ -39,4 +39,8 @@ def setup(app) -> dict[str, Any]:
         app.add_css_file(f"{ASSERT_SUBDIR}/{css_file}")
     app.add_directive("erbsland-ansi", ANSIBlockDirective)
     app.connect("doctree-resolved", ANSICodeParser())
-    return {"version": _resolve_version(), "parallel_read_safe": True, "parallel_write_safe": True}
+    return {
+        "version": _resolve_version(),
+        "parallel_read_safe": True,
+        "parallel_write_safe": True,
+    }
