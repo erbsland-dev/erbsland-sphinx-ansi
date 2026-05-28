@@ -12,7 +12,7 @@ Development Requirements
 ========================
 
 If you want to work on this extension, all required dependencies are listed in the ``requirements-dev.txt`` file.
-You need *Python 3.12* or newer for development.
+You need *Python 3.13* or newer for development.
 
 You can install them with:
 
