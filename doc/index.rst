@@ -10,9 +10,12 @@ or interactive sessions where color improves readability and realism.
 Features
 ========
 
-*   Optional ``escape-char`` parameter that allows you to replace the ANSI escape character (``\x1b``) with a visible placeholder character inside reStructuredText sources.
-*   Optional ``theme`` parameter that allows you to customize the CSS class prefix used for styling.
-*   Works with both HTML and non-HTML output formats.
+* Render ANSI-colored terminal output in Sphinx documentation.
+* Support for standard ANSI text styles and colors.
+* Optional ``escape-char`` parameter for readable source files.
+* Optional ``theme`` parameter for custom CSS styling.
+* Works with both HTML and non-HTML output formats.
+* Gracefully ignores unsupported terminal control sequences.
 
 Quick Start
 ===========
@@ -109,10 +112,58 @@ Output with the custom theme:
     ␛[32m[sphinx-autobuild] ␛[36mServing on http://127.0.0.1:9000␛[0m
     ␛[32m[sphinx-autobuild] ␛[36mWaiting to detect changes...␛[0m
 
-Demo
-====
+Limitations
+===========
 
-The following demo includes additional control sequences that are ignored during rendering.
+``erbsland-sphinx-ansi`` is an ANSI style renderer, not a terminal emulator.
+
+The extension supports ANSI text formatting such as:
+
+* Colors (foreground and background)
+* Bold, faint, italic, underline, strike-through
+* Style reset sequences
+
+Some terminal control sequences are ignored because they cannot be represented
+reliably in static documentation. Examples include:
+
+* Cursor movement
+* Cursor visibility changes
+* Screen clearing
+* Alternate screen buffers
+* Character-set switching
+* Interactive terminal updates
+
+If your output contains terminal control sequences that modify the screen state,
+the rendered result may differ from what you see in a real terminal.
+
+Preprocessing Terminal Output
+-----------------------------
+
+Some tools generate output that relies on terminal emulation. Examples include
+progress bars, full-screen applications, interactive programs, and output that
+uses cursor movement or character-set switching.
+
+For such output, preprocess the captured terminal session with
+``erbsland-ansi-convert`` before including it in your documentation:
+
+.. code-block:: shell
+
+    pip install erbsland-ansi-convert
+
+    erbsland-ansi-convert input.ansi -o output.ansi
+
+``erbsland-ansi-convert`` emulates a terminal and writes the final screen
+contents as plain ANSI-formatted text. The converted output can then be rendered
+correctly by ``erbsland-sphinx-ansi``.
+
+Rendering ANSI Output
+=====================
+
+.. note::
+
+    The following example contains a few terminal control sequences that are
+    ignored during rendering. The extension renders the text and formatting
+    information only; it does not emulate terminal behavior.
 
 .. erbsland-ansi::
     :escape-char: ␛
