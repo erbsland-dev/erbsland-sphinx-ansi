@@ -66,6 +66,32 @@ def _html_literal_block(container: nodes.Element) -> nodes.literal_block:
     return literal_block
 
 
+def test_ansi_literal_block_accepts_text_positional_for_compatibility():
+    # sphinxcontrib-programoutput constructs this node like a docutils literal_block.
+    text = "A\x1b[31mB\x1b[0m"
+
+    block = ANSILiteralBlock(text, text)
+
+    assert block.rawsource == text
+    assert block.astext() == text
+
+
+def test_two_argument_ansi_literal_block_works_with_parser_outputs():
+    parser = ANSICodeParser()
+    text = "A\x1b[31mB\x1b[0m"
+
+    non_html_block = ANSILiteralBlock(text, text)
+    non_html_tree = _DocTree(non_html_block)
+    parser(_App("latex"), non_html_tree, "index")
+    assert non_html_tree.container.children[0].astext() == "AB"
+
+    html_block = ANSILiteralBlock(text, text)
+    html_tree = _DocTree(html_block)
+    parser(_App("html"), html_tree, "index")
+    literal_block = _html_literal_block(html_tree.container.children[0])
+    assert literal_block.astext() == "AB"
+
+
 def test_remove_ansi_formatting_replaces_literal_block_with_plain_text():
     parser = ANSICodeParser()
     block = ANSILiteralBlock("Hello \x1b[31mRed\x1b[0m")

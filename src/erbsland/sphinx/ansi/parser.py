@@ -18,7 +18,9 @@ DEFAULT_THEME = "erbsland-ansi"
 class ANSILiteralBlock(nodes.container):
     """The literal_block node, for ANSI color codes."""
 
-    def __init__(self, rawsource: str = "", *children, **attributes):
+    def __init__(self, rawsource: str = "", text: str = "", *children, **attributes):
+        if text:
+            children = (nodes.Text(text), *children)
         super().__init__(rawsource, *children, **attributes)
 
 
